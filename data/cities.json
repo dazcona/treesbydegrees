@@ -1,0 +1,50 @@
+[
+  {
+    "country": "United Kingdom",
+    "name": "London",
+    "lat": "51.509",
+    "lng": "-0.08"
+  },
+  {
+    "country": "Ireland",
+    "name": "Dublin",
+    "lat": "42.54277",
+    "lng": "1.73361"
+  },
+  {
+    "country": "Spain",
+    "name": "Madrid",
+    "lat": "42.46372",
+    "lng": "1.49129"
+  },
+  {
+    "country": "Ireland",
+    "name": "Cork",
+    "lat": "42.54277",
+    "lng": "1.73361"
+  },
+  {
+    "country": "United Kingdom",
+    "name": "Manchester",
+    "lat": "42.46372",
+    "lng": "1.49129"
+  },
+  {
+    "country": "Spain",
+    "name": "Barcelona",
+    "lat": "42.54277",
+    "lng": "1.73361"
+  },
+  {
+    "country": "Japan",
+    "name": "Tokio",
+    "lat": "42.54277",
+    "lng": "1.73361"
+  },
+  {
+    "country": "United States of America",
+    "name": "San Francisco",
+    "lat": "37.7934262",
+    "lng": "-122.437451,17"
+  }
+]

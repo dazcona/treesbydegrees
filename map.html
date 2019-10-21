@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+  <head>
+    
+    <title>Trees by Degrees</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
+
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="fontawesome/css/all.css" />
+
+    <script src="js/leaflet.js"></script> 
+    <script src="js/wrld.js"></script>
+    <script src="js/jquery-2.1.0.min.js"></script>
+    <script src="js/marker_controller.js"></script>
+    <script src="js/L.Control.Sidebar.js"></script>
+    <script src="js/sidebar.js"></script>
+    <link rel="stylesheet" href="css/style.css">   
+  
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+
+    <div id="sidebar" style="border-radius: 35px;" class="sidebar collapsed">
+    
+        <div class="sidebar-tabs">
+            <ul role="tablist">
+                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                <!-- <li class="disabled"><a href="#tree" role="tab"><i class="fa fa-feather"></i></a></li> -->
+            </ul>
+            <ul role="tablist">
+                <li><a href="/" role="tab"><i class="fa fa-home"></i></a></li>
+            </ul>
+        </div>
+                    
+        <div class="sidebar-content">
+
+            <div class="sidebar-pane" id="park">
+                <h1 class="sidebar-header">
+                    Prunus Padus
+                    <span class="sidebar-close">
+                        <i class="fa fa-caret-left"></i>
+                    </span>
+                </h1>
+                <h1>How to Plant a Prunus Padus</h1>
+                <h2>Follow the following steps:</h2>
+                <img width="100%" src="img/how_to_plant_a_tree.png"><br>
+                <a target="_blank" href="https://www.thegardenshop.ie/how-to-plant-a-tree-from-containers/">https://www.thegardenshop.ie/how-to-plant-a-tree-from-containers/</a>
+                <p> Prunus padus, known as bird cherry, hackberry, hagberry, or Mayday tree, is a flowering plant in the rose family Rosaceae. It is a species of cherry, a deciduous small tree or large shrub up to 16 m tall. It is the type species of the subgenus Padus, which have flowers in racemes.</p>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <!-- MAP -->
+
+    <div id="map" class="sidebar-map"></div>
+
+    <!-- HEATMAP DATA -->
+
+    <script src="js/heatmap.js"></script>
+
+    <!-- PROFILE -->
+
+    <div id="profile" class="my-profile" style="z-index:1000; position: fixed; top: 5px; right: 15px; border: 5px; cursor: pointer;">
+
+        <img src="img/me_small.jpg" class="profile-picture" />
+    
+        <div class="bloc">
+            
+            <div class="content">
+                <span class="name">Tree planted today: 7</span>
+                <p class="presentation">
+                    🌳🌳🌳🌳🌲🌲🌴
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        // CITY
+
+        var urlParams = new URLSearchParams(window.location.search);
+
+        if ( ! urlParams.has('city') ) {
+            window.location.replace("/");
+        }
+
+        var city = urlParams.get('city');
+        var lat = urlParams.get('lat');
+        var long = urlParams.get('long');
+
+        // MAP
+
+        var key = '68fc6881bbfee411f30452ab9a919dcc'
+
+        var map = L.eeGeo.map('map', key, {
+            center: [ lat, long ],
+            zoom: 16
+        });
+
+        // SIDEBAR
+
+        var sidebar = L.control.sidebar('sidebar').addTo(map);
+
+        // DATA
+
+        var LeafIcon = L.Icon.extend({
+            options: {
+                iconSize:     [20, 50],
+                iconAnchor:   [20, 50]
+            }
+        });
+
+        var tree_icons = [ 
+            new LeafIcon( { iconUrl: 'img/tree1.png' } ), 
+            new LeafIcon( { iconUrl: 'img/tree2.png' } ), 
+            new LeafIcon( { iconUrl: 'img/tree3.png' } ),
+        ];
+
+        var new_icons = [
+            new LeafIcon( { iconUrl: 'img/tree1_todo.png' } ), 
+            new LeafIcon( { iconUrl: 'img/tree2_todo.png' } ), 
+            new LeafIcon( { iconUrl: 'img/tree3_todo.png' } ),
+        ]
+
+        // PROFILE
+
+        var profile = document.getElementById('profile');
+        var showTrees = false;
+
+        // LOAD TREES
+
+        var blue_markers = [];
+        
+        $.getJSON("data/trees.json", function(data) {
+
+            var trees = data[city];
+
+            if (trees.length > 0) {
+
+                var existing_trees = trees.slice(0, trees.length / 2);
+                console.log(existing_trees);
+                var new_trees = trees.slice(trees.length / 2);
+                console.log(new_trees);
+            
+                var less_trees = 10;
+
+                for (i = 0; i < less_trees * existing_trees.length - 1; i += less_trees) {
+                    
+                    if (existing_trees[i]) {
+                        
+                        let tree = existing_trees[i];
+                        let lat = tree['latitude'];
+                        let long = tree['longitude'];
+                        let icon = tree_icons[Math.floor(Math.random() * tree_icons.length)]; // random tree
+                        
+                        let marker = L.marker( [ lat, long ], { icon: icon } ).addTo(map);;
+                    };
+                }
+
+                profile.onclick = function() {
+
+                    if (! showTrees) {
+
+                        for (i = 0; i < less_trees * new_trees.length - 1; i += less_trees) {
+                        
+                            if (new_trees[i]) {
+                                
+                                let tree = new_trees[i];
+                                let lat = tree['latitude'];
+                                let long = tree['longitude'];
+                                let icon = new_icons[Math.floor(Math.random() * new_icons.length)]; // random tree
+                                
+                                let marker = L.marker( [ lat, long ], { icon: icon } ).addTo(map).on('click', 
+                                    function (event) {
+                                        if (event.latlng) {
+                                            map.setView(event.latlng); // Center MAP
+                                        }
+                                        sidebar.open('park');
+                                    });
+                                blue_markers.push(marker);
+                            };
+                        }
+
+                        showTrees = true;
+                    }
+
+                    else {
+
+                        for (i = 0; i < blue_markers.length; i++) {
+                            map.removeLayer(blue_markers[i]); // remove
+                        }
+
+                        showTrees = false;
+
+                    }
+
+                };
+            }
+        });
+
+        // LOAD HEATMAPS
+
+        L.geoJSON(heatmap, {
+            style: function (feature) {
+                return feature.properties && feature.properties.style;
+            },
+        }).addTo(map);
+
+    </script>
+
+
+
+</body>
+</html>
