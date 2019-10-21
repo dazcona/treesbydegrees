@@ -2,7 +2,7 @@
 
 Planting trees in global hotspots to reduce local temperatures. We use NASA data to identify the most critical locations!
 
-* [Slides](https://docs.google.com/presentation/d/12ar0BFb27I9OsFZM2y9oqLLeSPi0TljWqEuMVIeepkU/) that include: 
+* [Slides for NASA Hackathon @ Baily Labs, October 2019](https://docs.google.com/presentation/d/1xrDjWhTVvTT2yY43wilW4smr_R9s079j8K5ySGh3DA0/)
 * [Twitter](https://twitter.com/treesbydegrees)
 
 ## Technologies
